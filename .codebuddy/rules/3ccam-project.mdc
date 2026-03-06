@@ -1,0 +1,114 @@
+---
+description: 
+alwaysApply: true
+enabled: true
+updatedAt: 2026-03-06T03:40:28.107Z
+provider: 
+---
+
+# 3CCam 项目规则 — 3D动作游戏相机设计研究
+
+## 项目定位
+这是一个**3D动作游戏相机设计的研究与展示项目**，目标是系统性拆解分析市面主流动作游戏的相机系统，并通过Web站点对外展示。
+
+## 技术栈
+- **Web框架**: Nuxt 3 + Nuxt Content (Markdown驱动的内容站点)
+- **部署**: 静态生成(SSG)，支持部署到个人服务器 / GitHub Pages / 其他静态托管
+- **媒体资源**: 图片/视频等大文件通过外部CDN链接引用，**不存放在仓库中**
+
+## 目录结构约定
+
+```
+3CCam/
+├── content/                  # Markdown内容（Nuxt Content 自动路由）
+│   ├── index.md              # 首页内容
+│   ├── games/                # 按游戏分类的相机分析
+│   │   ├── ninja-gaiden.md   # 忍者龙剑传
+│   │   ├── devil-may-cry.md  # 鬼泣
+│   │   ├── god-of-war.md     # 战神
+│   │   ├── wuthering-waves.md# 鸣潮
+│   │   ├── genshin-impact.md # 原神
+│   │   ├── arknights-endfield.md # 明日方舟:终末地
+│   │   └── ...
+│   ├── topics/               # 按专题分类（跨游戏对比）
+│   │   ├── lock-on.md        # 锁定系统对比
+│   │   ├── combat-camera.md  # 战斗相机对比
+│   │   └── ...
+│   └── notes/                # 杂记/灵感/随笔
+├── research/                 # 原始研究资料（不参与Web构建）
+│   ├── games/                # 按游戏分类的原始素材引用
+│   │   ├── ninja-gaiden/
+│   │   ├── devil-may-cry/
+│   │   └── ...
+│   ├── references/           # 参考文献、文章链接、GDC演讲等
+│   └── tables/               # 原始数据表格(csv/xlsx)
+├── app/                      # Nuxt 自定义Vue组件/布局等
+│   ├── components/
+│   ├── layouts/
+│   └── pages/
+├── public/                   # 静态资源（少量小图标等）
+├── nuxt.config.ts
+├── package.json
+└── .gitignore
+```
+
+## 内容编写规范
+
+### Markdown Front Matter 标准字段
+每篇游戏分析文档必须包含以下 front matter：
+
+```yaml
+---
+title: "游戏名称 - 相机系统分析"
+game: "游戏英文名"
+developer: "开发商"
+genre: "动作/ARPG/..."
+platform: ["PS5", "PC", "Mobile"]
+camera_type: ["TPS", "Lock-on", "Free"]
+tags: ["combat", "exploration", "lock-on"]
+date: 2026-03-06
+status: "draft" | "in-progress" | "published"
+cover: "https://cdn.example.com/cover.jpg"  # 外部链接
+---
+```
+
+### 分析框架（每款游戏统一结构）
+1. **概述** — 游戏简介与相机系统总览
+2. **探索相机** — 自由视角、跟随逻辑、碰撞处理
+3. **战斗相机** — 锁定/非锁定、目标切换、镜头抖动
+4. **特殊相机** — 过场、QTE、处决演出等
+5. **参数采集** — FOV、距离、高度、延迟等可量化数据
+6. **优缺点总结**
+7. **参考资料** — 视频链接、文章链接
+
+### 媒体引用规范
+- **图片/视频** 一律使用外部CDN链接，格式：
+  ```md
+  ![描述](https://cdn.example.com/path/to/image.jpg)
+  <video src="https://cdn.example.com/path/to/video.mp4" controls />
+  ```
+- `research/` 目录下可存放链接清单文件（`.links.md`），记录素材的原始来源URL
+- 仓库内 `public/` 仅存放少量图标、logo等小文件（单文件 < 500KB）
+
+## 工作流
+
+### 新增一款游戏分析的流程
+1. 在 `research/games/<game-name>/` 下创建素材链接文件
+2. 在 `content/games/<game-name>.md` 下按模板创建分析文档
+3. 本地 `npx nuxi dev` 预览
+4. 状态从 `draft` → `in-progress` → `published`
+5. 构建部署：`npx nuxi generate` → 上传 `.output/public`
+
+### 编码规范
+- Vue组件使用 `<script setup lang="ts">` + Composition API
+- 样式使用 Tailwind CSS（通过 @nuxtjs/tailwindcss 模块）
+- 组件命名：PascalCase，文件名与组件名一致
+- Commit message 格式：`type(scope): message`
+  - type: feat / fix / content / research / style / chore
+  - scope: web / content / research
+
+## AI 协作指引
+- 当用户要求"分析某款游戏"时，先创建 `research/games/<name>/` 和 `content/games/<name>.md` 模板
+- 当用户要求"对比某项特性"时，在 `content/topics/` 下创建专题文档
+- 编辑 Markdown 内容时保持分析框架统一
+- Web开发保持轻量，优先利用 Nuxt Content 内置能力，避免过度工程化

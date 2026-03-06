@@ -1,0 +1,22 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* Prose 样式微调 */
+.prose {
+  --tw-prose-body: theme('colors.gray.300');
+  --tw-prose-headings: theme('colors.white');
+  --tw-prose-links: theme('colors.blue.400');
+}
+
+.prose img {
+  @apply rounded-lg shadow-lg;
+}
+
+.prose video {
+  @apply rounded-lg shadow-lg w-full;
+}
+
+.prose table {
+  @apply text-sm;
+}

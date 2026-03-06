@@ -1,0 +1,31 @@
+# Nuxt dev/build outputs
+.output
+.data
+.nuxt
+.nitro
+.cache
+
+# Node dependencies
+node_modules
+
+# Logs
+logs
+*.log
+
+# Misc
+.DS_Store
+.fleet
+.idea
+
+# Local env files
+.env
+.env.*
+!.env.example
+
+# Research large files (if any accidentally added)
+research/**/*.mp4
+research/**/*.mov
+research/**/*.png
+research/**/*.jpg
+research/**/*.jpeg
+research/**/*.gif

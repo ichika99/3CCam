@@ -1,0 +1,49 @@
+---
+description: 进行 Web 页面开发、组件编写、样式调整、部署配置时使用此规则。
+alwaysApply: false
+enabled: true
+updatedAt: 2026-03-06T03:40:54.567Z
+provider: 
+---
+
+# Web 开发规则
+
+## 触发条件
+当进行 Web 页面开发、组件编写、样式调整时遵循此规则。
+
+## 技术要求
+- Nuxt 3 + Nuxt Content v2 + Tailwind CSS
+- 静态生成模式 (SSG)：`nuxi generate`
+- TypeScript 优先
+
+## 组件开发
+- 使用 `<script setup lang="ts">`
+- 组件放在 `app/components/` 下，自动导入
+- 命名：PascalCase（如 `GameCard.vue`、`VideoEmbed.vue`）
+
+## 保持轻量
+- 优先使用 Nuxt Content 内置组件（`<ContentDoc>`、`<ContentList>`、`<ContentNavigation>`）
+- 最小化自定义组件数量
+- 避免引入重型UI框架，Tailwind CSS 足够
+- 不做过度设计，页面以内容阅读为核心
+
+## 自定义 Markdown 组件（MDC）
+如需在 Markdown 中嵌入交互组件，使用 Nuxt Content 的 MDC 语法：
+```md
+::video-embed{src="https://cdn.example.com/video.mp4"}
+::
+
+::image-gallery
+![img1](url1)
+![img2](url2)
+::
+
+::param-table{game="devil-may-cry"}
+::
+```
+对应组件放在 `app/components/content/` 目录下。
+
+## 部署
+- `npx nuxi generate` 生成静态文件到 `.output/public/`
+- 可部署至：个人服务器 / GitHub Pages / Vercel / Netlify
+- GitHub Pages 需配置 `nuxt.config.ts` 中的 `app.baseURL`

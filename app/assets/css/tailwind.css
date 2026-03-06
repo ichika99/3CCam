@@ -1,0 +1,224 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* ========== 全局基础 ========== */
+@layer base {
+  html {
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'PingFang SC',
+      'Hiragino Sans GB', 'Microsoft YaHei', 'Helvetica Neue', Helvetica, Arial,
+      sans-serif;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+  }
+
+  /* 自定义滚动条 — 亮色 */
+  ::-webkit-scrollbar {
+    width: 6px;
+    height: 6px;
+  }
+  ::-webkit-scrollbar-track {
+    background: transparent;
+  }
+  ::-webkit-scrollbar-thumb {
+    background: rgba(0, 0, 0, 0.12);
+    border-radius: 3px;
+  }
+  ::-webkit-scrollbar-thumb:hover {
+    background: rgba(0, 0, 0, 0.2);
+  }
+  /* 暗色滚动条 */
+  .dark ::-webkit-scrollbar-thumb {
+    background: rgba(255, 255, 255, 0.08);
+  }
+  .dark ::-webkit-scrollbar-thumb:hover {
+    background: rgba(255, 255, 255, 0.15);
+  }
+}
+
+/* ========== Prose / 文章排版 — 亮色 ========== */
+.prose {
+  --tw-prose-body: #374151;
+  --tw-prose-headings: #111827;
+  --tw-prose-links: #2563eb;
+  --tw-prose-bold: #1f2937;
+  --tw-prose-counters: #6b7280;
+  --tw-prose-bullets: #9ca3af;
+  --tw-prose-hr: #e5e7eb;
+  --tw-prose-quotes: #6b7280;
+  --tw-prose-quote-borders: rgba(37, 99, 235, 0.3);
+  --tw-prose-code: #1f2937;
+  --tw-prose-pre-code: #374151;
+  --tw-prose-pre-bg: #f9fafb;
+  --tw-prose-th-borders: #e5e7eb;
+  --tw-prose-td-borders: #f3f4f6;
+  font-size: 0.938rem;
+  line-height: 1.75;
+}
+
+/* Prose 暗色 */
+.dark .prose {
+  --tw-prose-body: #b0b8c8;
+  --tw-prose-headings: #e8ecf1;
+  --tw-prose-links: #60a5fa;
+  --tw-prose-bold: #d4dae4;
+  --tw-prose-counters: #7a8596;
+  --tw-prose-bullets: #4a5568;
+  --tw-prose-hr: rgba(255, 255, 255, 0.06);
+  --tw-prose-quotes: #8b95a6;
+  --tw-prose-quote-borders: rgba(96, 165, 250, 0.3);
+  --tw-prose-code: #e8ecf1;
+  --tw-prose-pre-code: #b0b8c8;
+  --tw-prose-pre-bg: rgba(0, 0, 0, 0.3);
+  --tw-prose-th-borders: rgba(255, 255, 255, 0.1);
+  --tw-prose-td-borders: rgba(255, 255, 255, 0.06);
+}
+
+.prose h1 {
+  @apply text-2xl font-bold tracking-tight;
+}
+.prose h2 {
+  @apply text-xl font-semibold tracking-tight pb-2 mt-10 mb-4;
+  border-bottom: 1px solid #e5e7eb;
+}
+.dark .prose h2 {
+  border-bottom-color: rgba(255, 255, 255, 0.06);
+}
+.prose h3 {
+  @apply text-base font-semibold mt-8 mb-3;
+}
+.prose h4 {
+  @apply text-sm font-semibold mt-6 mb-2;
+  color: #6b7280;
+}
+.dark .prose h4 {
+  color: #9ca3af;
+}
+
+.prose a {
+  @apply no-underline hover:underline underline-offset-2;
+  color: #2563eb;
+  text-decoration-color: rgba(37, 99, 235, 0.3);
+}
+.dark .prose a {
+  color: #60a5fa;
+  text-decoration-color: rgba(96, 165, 250, 0.4);
+}
+
+.prose code:not(pre code) {
+  @apply rounded px-1.5 py-0.5 text-[13px] font-normal;
+  background: rgba(0, 0, 0, 0.05);
+  color: #2563eb;
+}
+.dark .prose code:not(pre code) {
+  background: rgba(255, 255, 255, 0.06);
+  color: #93c5fd;
+}
+.prose code::before,
+.prose code::after {
+  content: '' !important;
+}
+
+.prose pre {
+  @apply rounded-lg text-[13px] leading-relaxed;
+  border: 1px solid #e5e7eb;
+  background: #f9fafb;
+}
+.dark .prose pre {
+  border-color: rgba(255, 255, 255, 0.06);
+  background: #0a0c12;
+}
+
+.prose blockquote {
+  @apply border-l-2 rounded-r-lg px-4 py-3 not-italic;
+  border-left-color: rgba(37, 99, 235, 0.3);
+  background: rgba(37, 99, 235, 0.03);
+  color: #6b7280;
+}
+.dark .prose blockquote {
+  border-left-color: rgba(96, 165, 250, 0.3);
+  background: rgba(96, 165, 250, 0.03);
+  color: #9ca3af;
+}
+
+.prose table {
+  @apply text-sm;
+}
+.prose thead th {
+  @apply px-3 py-2 text-left text-xs font-semibold uppercase tracking-wider;
+  border-bottom: 1px solid #e5e7eb;
+  background: #f9fafb;
+  color: #6b7280;
+}
+.dark .prose thead th {
+  border-bottom-color: rgba(255, 255, 255, 0.1);
+  background: rgba(255, 255, 255, 0.02);
+  color: #9ca3af;
+}
+.prose tbody td {
+  @apply px-3 py-2;
+  border-bottom: 1px solid #f3f4f6;
+  color: #374151;
+}
+.dark .prose tbody td {
+  border-bottom-color: rgba(255, 255, 255, 0.04);
+  color: #d1d5db;
+}
+.prose tbody tr:hover {
+  background: rgba(0, 0, 0, 0.02);
+}
+.dark .prose tbody tr:hover {
+  background: rgba(255, 255, 255, 0.02);
+}
+
+.prose img {
+  @apply rounded-lg;
+  border: 1px solid #e5e7eb;
+}
+.dark .prose img {
+  border-color: rgba(255, 255, 255, 0.06);
+}
+.prose video {
+  @apply rounded-lg w-full;
+  border: 1px solid #e5e7eb;
+}
+.dark .prose video {
+  border-color: rgba(255, 255, 255, 0.06);
+}
+
+.prose hr {
+  border-color: #e5e7eb;
+}
+.dark .prose hr {
+  border-color: rgba(255, 255, 255, 0.06);
+}
+
+.prose strong {
+  @apply font-semibold;
+  color: #1f2937;
+}
+.dark .prose strong {
+  color: #e5e7eb;
+}
+
+.prose ul > li::marker {
+  color: #9ca3af;
+}
+.dark .prose ul > li::marker {
+  color: #4a5568;
+}
+.prose ol > li::marker {
+  color: #6b7280;
+}
+.dark .prose ol > li::marker {
+  color: #7a8596;
+}
+
+/* ========== 侧边栏样式 ========== */
+.sidebar {
+  scrollbar-width: thin;
+  scrollbar-color: rgba(0, 0, 0, 0.1) transparent;
+}
+.dark .sidebar {
+  scrollbar-color: rgba(255, 255, 255, 0.08) transparent;
+}

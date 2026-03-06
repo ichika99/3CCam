@@ -1,0 +1,19 @@
+---
+description: 
+alwaysApply: true
+enabled: true
+updatedAt: 2026-03-06T07:47:04.794Z
+provider: 
+---
+
+# Git 操作安全规则
+
+## 禁止主动推送
+- **默认禁止** `git push` 到 GitHub（包括任何远程仓库）
+- 只有用户**明确要求**推送时，才可以执行 `git push`
+- 拉取操作（`git pull`、`git fetch`）不受限制，可随时执行
+
+## Git 配置
+- 本地用户名：`ichika99`
+- 本地邮箱：`806708480@qq.com`
+- 远程仓库：`git@github.com:ichika99/3CCam.git`（origin）
