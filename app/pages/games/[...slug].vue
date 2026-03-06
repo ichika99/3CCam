@@ -2,7 +2,7 @@
   <article>
     <ContentDoc v-slot="{ doc }">
       <!-- 文章头部 -->
-      <header class="mb-8 border-b border-gray-200 dark:border-white/[0.06] pb-6">
+      <header class="mb-6 sm:mb-8 border-b border-gray-200 dark:border-white/[0.06] pb-4 sm:pb-6">
         <div class="mb-3 flex flex-wrap items-center gap-2 text-xs">
           <span
             class="inline-flex items-center rounded-full px-2 py-0.5 font-medium"
@@ -17,7 +17,7 @@
           <span v-if="doc.developer" class="text-gray-400 dark:text-gray-500">{{ doc.developer }}</span>
           <span v-if="doc.genre" class="text-gray-400 dark:text-gray-500">· {{ doc.genre }}</span>
         </div>
-        <h1 class="text-2xl font-bold tracking-tight text-gray-900 dark:text-white">{{ doc.title }}</h1>
+        <h1 class="text-xl sm:text-2xl font-bold tracking-tight text-gray-900 dark:text-white">{{ doc.title }}</h1>
         <div v-if="doc.camera_type" class="mt-3 flex flex-wrap gap-1.5">
           <span
             v-for="type in doc.camera_type"

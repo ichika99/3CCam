@@ -1,7 +1,7 @@
 <template>
   <div>
-    <h1 class="mb-2 text-2xl font-bold tracking-tight text-gray-900 dark:text-white">游戏相机分析</h1>
-    <p class="mb-8 text-sm text-gray-400 dark:text-gray-500">从侧边栏选择一款游戏开始阅读，或浏览下方列表。</p>
+    <h1 class="mb-2 text-xl sm:text-2xl font-bold tracking-tight text-gray-900 dark:text-white">游戏相机分析</h1>
+    <p class="mb-6 sm:mb-8 text-sm text-gray-400 dark:text-gray-500">从侧边栏选择一款游戏开始阅读，或浏览下方列表。</p>
 
     <ContentList path="/games" v-slot="{ list }">
       <div class="space-y-3">
@@ -9,7 +9,7 @@
           v-for="article in list"
           :key="article._path"
           :to="article._path"
-          class="group flex items-center gap-4 rounded-lg border border-gray-200 bg-gray-50 px-5 py-4 transition-all hover:border-blue-300 hover:bg-blue-50 dark:border-white/[0.06] dark:bg-white/[0.02] dark:hover:border-blue-500/20 dark:hover:bg-blue-500/[0.03]"
+          class="group flex flex-col sm:flex-row sm:items-center gap-2 sm:gap-4 rounded-lg border border-gray-200 bg-gray-50 px-4 sm:px-5 py-3 sm:py-4 transition-all hover:border-blue-300 hover:bg-blue-50 active:scale-[0.99] dark:border-white/[0.06] dark:bg-white/[0.02] dark:hover:border-blue-500/20 dark:hover:bg-blue-500/[0.03]"
         >
           <div class="flex-1 min-w-0">
             <div class="flex items-center gap-2">
@@ -30,7 +30,7 @@
               <span v-if="article.genre">{{ article.genre }}</span>
             </div>
           </div>
-          <div v-if="article.camera_type" class="flex flex-shrink-0 gap-1.5">
+          <div v-if="article.camera_type" class="flex flex-shrink-0 flex-wrap gap-1.5">
             <span
               v-for="type in article.camera_type"
               :key="type"

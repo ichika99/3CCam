@@ -10,6 +10,36 @@
       sans-serif;
     -webkit-font-smoothing: antialiased;
     -moz-osx-font-smoothing: grayscale;
+    /* iOS: 防止横屏时文字自动放大 */
+    -webkit-text-size-adjust: 100%;
+    text-size-adjust: 100%;
+  }
+
+  /* iOS 安全区域 padding */
+  .safe-area-top {
+    padding-top: env(safe-area-inset-top, 0);
+  }
+  .safe-area-bottom {
+    padding-bottom: env(safe-area-inset-bottom, 0);
+  }
+  .safe-area-left {
+    padding-left: env(safe-area-inset-left, 0);
+  }
+  .safe-area-right {
+    padding-right: env(safe-area-inset-right, 0);
+  }
+
+  /* 全局触摸优化 */
+  a, button {
+    -webkit-tap-highlight-color: transparent;
+  }
+
+  /* iOS 弹性滚动 */
+  .overscroll-contain {
+    overscroll-behavior: contain;
+  }
+  .-webkit-overflow-scrolling-touch {
+    -webkit-overflow-scrolling: touch;
   }
 
   /* 自定义滚动条 — 亮色 */
@@ -34,6 +64,14 @@
   .dark ::-webkit-scrollbar-thumb:hover {
     background: rgba(255, 255, 255, 0.15);
   }
+
+  /* 移动端隐藏滚动条（更清爽） */
+  @media (max-width: 1023px) {
+    ::-webkit-scrollbar {
+      width: 0;
+      height: 0;
+    }
+  }
 }
 
 /* ========== Prose / 文章排版 — 亮色 ========== */
@@ -56,6 +94,14 @@
   line-height: 1.75;
 }
 
+/* 移动端 prose 字号调整 */
+@media (max-width: 639px) {
+  .prose {
+    font-size: 0.875rem;
+    line-height: 1.7;
+  }
+}
+
 /* Prose 暗色 */
 .dark .prose {
   --tw-prose-body: #b0b8c8;
@@ -75,20 +121,20 @@
 }
 
 .prose h1 {
-  @apply text-2xl font-bold tracking-tight;
+  @apply text-xl sm:text-2xl font-bold tracking-tight;
 }
 .prose h2 {
-  @apply text-xl font-semibold tracking-tight pb-2 mt-10 mb-4;
+  @apply text-lg sm:text-xl font-semibold tracking-tight pb-2 mt-8 sm:mt-10 mb-4;
   border-bottom: 1px solid #e5e7eb;
 }
 .dark .prose h2 {
   border-bottom-color: rgba(255, 255, 255, 0.06);
 }
 .prose h3 {
-  @apply text-base font-semibold mt-8 mb-3;
+  @apply text-base font-semibold mt-6 sm:mt-8 mb-3;
 }
 .prose h4 {
-  @apply text-sm font-semibold mt-6 mb-2;
+  @apply text-sm font-semibold mt-4 sm:mt-6 mb-2;
   color: #6b7280;
 }
 .dark .prose h4 {
@@ -123,6 +169,9 @@
   @apply rounded-lg text-[13px] leading-relaxed;
   border: 1px solid #e5e7eb;
   background: #f9fafb;
+  /* 移动端水平滚动代码块 */
+  overflow-x: auto;
+  -webkit-overflow-scrolling: touch;
 }
 .dark .prose pre {
   border-color: rgba(255, 255, 255, 0.06);
@@ -141,8 +190,19 @@
   color: #9ca3af;
 }
 
+/* 表格移动端横向滚动 */
 .prose table {
   @apply text-sm;
+  display: block;
+  overflow-x: auto;
+  -webkit-overflow-scrolling: touch;
+  white-space: nowrap;
+}
+@media (min-width: 640px) {
+  .prose table {
+    display: table;
+    white-space: normal;
+  }
 }
 .prose thead th {
   @apply px-3 py-2 text-left text-xs font-semibold uppercase tracking-wider;
@@ -172,8 +232,11 @@
 }
 
 .prose img {
-  @apply rounded-lg;
+  @apply rounded-lg w-full;
   border: 1px solid #e5e7eb;
+  /* 防止图片超出容器 */
+  max-width: 100%;
+  height: auto;
 }
 .dark .prose img {
   border-color: rgba(255, 255, 255, 0.06);
@@ -181,6 +244,8 @@
 .prose video {
   @apply rounded-lg w-full;
   border: 1px solid #e5e7eb;
+  max-width: 100%;
+  height: auto;
 }
 .dark .prose video {
   border-color: rgba(255, 255, 255, 0.06);

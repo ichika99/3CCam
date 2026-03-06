@@ -1,23 +1,23 @@
 <template>
-  <div class="flex flex-col items-center justify-center py-20">
+  <div class="flex flex-col items-center justify-center py-12 sm:py-20 px-4">
     <!-- Logo 区域 -->
     <div class="mb-8 text-center">
-      <h1 class="text-5xl font-bold tracking-tight">
+      <h1 class="text-4xl sm:text-5xl font-bold tracking-tight">
         <span class="text-blue-500 dark:text-blue-400">3C</span><span class="text-gray-900 dark:text-white">Cam</span>
       </h1>
-      <p class="mt-4 text-lg leading-relaxed text-gray-500 dark:text-gray-400">
+      <p class="mt-4 text-base sm:text-lg leading-relaxed text-gray-500 dark:text-gray-400">
         3D 动作游戏相机系统 · 拆解分析 · 设计研究
       </p>
-      <p class="mt-2 text-sm text-gray-400 dark:text-gray-500">
+      <p class="mt-2 text-xs sm:text-sm text-gray-400 dark:text-gray-500">
         系统性拆解主流动作游戏的相机设计，服务于 UE5 第三人称相机开发
       </p>
     </div>
 
     <!-- 快捷入口 -->
-    <div class="mt-4 grid w-full max-w-xl gap-3 sm:grid-cols-3">
+    <div class="mt-4 grid w-full max-w-xl gap-3 grid-cols-1 sm:grid-cols-3">
       <NuxtLink
         to="/games/ninja-gaiden"
-        class="group rounded-xl border border-gray-200 bg-gray-50 p-5 text-center transition-all hover:border-blue-300 hover:bg-blue-50 dark:border-white/[0.06] dark:bg-white/[0.02] dark:hover:border-blue-500/30 dark:hover:bg-blue-500/[0.04]"
+        class="group rounded-xl border border-gray-200 bg-gray-50 p-4 sm:p-5 text-center transition-all hover:border-blue-300 hover:bg-blue-50 active:scale-[0.98] dark:border-white/[0.06] dark:bg-white/[0.02] dark:hover:border-blue-500/30 dark:hover:bg-blue-500/[0.04]"
       >
         <div class="mb-2 text-2xl">🎮</div>
         <h3 class="text-sm font-medium text-gray-700 group-hover:text-blue-600 dark:text-gray-200 dark:group-hover:text-blue-400 transition-colors">游戏分析</h3>
@@ -25,7 +25,7 @@
       </NuxtLink>
       <NuxtLink
         to="/topics/lock-on"
-        class="group rounded-xl border border-gray-200 bg-gray-50 p-5 text-center transition-all hover:border-blue-300 hover:bg-blue-50 dark:border-white/[0.06] dark:bg-white/[0.02] dark:hover:border-blue-500/30 dark:hover:bg-blue-500/[0.04]"
+        class="group rounded-xl border border-gray-200 bg-gray-50 p-4 sm:p-5 text-center transition-all hover:border-blue-300 hover:bg-blue-50 active:scale-[0.98] dark:border-white/[0.06] dark:bg-white/[0.02] dark:hover:border-blue-500/30 dark:hover:bg-blue-500/[0.04]"
       >
         <div class="mb-2 text-2xl">📊</div>
         <h3 class="text-sm font-medium text-gray-700 group-hover:text-blue-600 dark:text-gray-200 dark:group-hover:text-blue-400 transition-colors">专题对比</h3>
@@ -33,7 +33,7 @@
       </NuxtLink>
       <NuxtLink
         to="/notes/first-note"
-        class="group rounded-xl border border-gray-200 bg-gray-50 p-5 text-center transition-all hover:border-blue-300 hover:bg-blue-50 dark:border-white/[0.06] dark:bg-white/[0.02] dark:hover:border-blue-500/30 dark:hover:bg-blue-500/[0.04]"
+        class="group rounded-xl border border-gray-200 bg-gray-50 p-4 sm:p-5 text-center transition-all hover:border-blue-300 hover:bg-blue-50 active:scale-[0.98] dark:border-white/[0.06] dark:bg-white/[0.02] dark:hover:border-blue-500/30 dark:hover:bg-blue-500/[0.04]"
       >
         <div class="mb-2 text-2xl">📝</div>
         <h3 class="text-sm font-medium text-gray-700 group-hover:text-blue-600 dark:text-gray-200 dark:group-hover:text-blue-400 transition-colors">笔记</h3>
@@ -42,7 +42,7 @@
     </div>
 
     <!-- 项目说明 -->
-    <div class="mt-12 max-w-lg rounded-xl border border-gray-200 bg-gray-50 p-6 text-sm leading-relaxed text-gray-500 dark:border-white/[0.06] dark:bg-white/[0.02] dark:text-gray-400">
+    <div class="mt-8 sm:mt-12 w-full max-w-lg rounded-xl border border-gray-200 bg-gray-50 p-5 sm:p-6 text-sm leading-relaxed text-gray-500 dark:border-white/[0.06] dark:bg-white/[0.02] dark:text-gray-400">
       <p class="mb-3">
         <span class="font-medium text-gray-700 dark:text-gray-200">项目目标：</span>
         从实际游戏出发，系统记录各类 3D 动作游戏的相机行为参数与设计策略。
