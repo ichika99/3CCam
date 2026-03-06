@@ -38,8 +38,9 @@ export default defineNuxtConfig({
     },
   },
 
-  // 如部署到 GitHub Pages 子路径，取消注释并修改：
-  // app: {
-  //   baseURL: '/3CCam/',
-  // },
+  // 自定义域名部署时 baseURL 为 '/'
+  // 如果不用自定义域名而用子路径，改为 '/3CCam/'
+  app: {
+    baseURL: '/',
+  },
 })
