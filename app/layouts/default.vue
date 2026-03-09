@@ -35,43 +35,37 @@
       <nav class="flex-1 overflow-y-auto overscroll-contain px-3 py-4 text-[13px] -webkit-overflow-scrolling-touch">
         <!-- 游戏分析 -->
         <SidebarSection title="游戏分析" icon="🎮">
-          <ContentList path="/games" v-slot="{ list }">
-            <SidebarLink
-              v-for="item in list"
-              :key="item._path ?? ''"
-              :to="item._path ?? ''"
-              :label="(item.title ?? '').replace(' - 相机系统分析', '')"
-              :status="item.status"
-              @click="closeSidebar"
-            />
-          </ContentList>
+          <SidebarLink
+            v-for="item in (gamesList ?? [])"
+            :key="item._path"
+            :to="item._path!"
+            :label="(item.title ?? '').replace(' - 相机系统分析', '')"
+            :status="(item as any).status"
+            @click="closeSidebar"
+          />
         </SidebarSection>
 
         <!-- 专题对比 -->
         <SidebarSection title="专题对比" icon="📊">
-          <ContentList path="/topics" v-slot="{ list }">
-            <SidebarLink
-              v-for="item in list"
-              :key="item._path ?? ''"
-              :to="item._path ?? ''"
-              :label="(item.title ?? '').replace(' - 相机系统分析', '')"
-              :status="item.status"
-              @click="closeSidebar"
-            />
-          </ContentList>
+          <SidebarLink
+            v-for="item in (topicsList ?? [])"
+            :key="item._path"
+            :to="item._path!"
+            :label="(item.title ?? '').replace(' - 相机系统分析', '')"
+            :status="(item as any).status"
+            @click="closeSidebar"
+          />
         </SidebarSection>
 
         <!-- 笔记 -->
         <SidebarSection title="笔记" icon="📝">
-          <ContentList path="/notes" v-slot="{ list }">
-            <SidebarLink
-              v-for="item in list"
-              :key="item._path ?? ''"
-              :to="item._path ?? ''"
-              :label="item.title ?? ''"
-              @click="closeSidebar"
-            />
-          </ContentList>
+          <SidebarLink
+            v-for="item in (notesList ?? [])"
+            :key="item._path"
+            :to="item._path!"
+            :label="item.title ?? ''"
+            @click="closeSidebar"
+          />
         </SidebarSection>
       </nav>
 
@@ -115,8 +109,8 @@
         </button>
       </header>
       <!-- 内容 -->
-      <div class="flex-1 overflow-y-auto overscroll-contain bg-white dark:bg-[#0f1117] transition-colors -webkit-overflow-scrolling-touch">
-        <div class="mx-auto max-w-4xl px-4 sm:px-8 py-6 sm:py-8 safe-area-bottom">
+      <div id="main-scroll-container" class="flex-1 overflow-y-auto overscroll-contain bg-white dark:bg-[#0f1117] transition-colors -webkit-overflow-scrolling-touch">
+        <div class="mx-auto max-w-4xl xl:max-w-5xl px-4 sm:px-8 py-6 sm:py-8 safe-area-bottom">
           <slot />
         </div>
       </div>
@@ -129,6 +123,17 @@ const { isDark, toggle } = useTheme()
 
 const sidebarOpen = ref(false)
 const route = useRoute()
+
+// 使用 queryContent 获取侧边栏导航数据
+const { data: gamesList } = await useAsyncData('sidebar-games', () =>
+  queryContent('/games').only(['_path', 'title', 'status']).find()
+)
+const { data: topicsList } = await useAsyncData('sidebar-topics', () =>
+  queryContent('/topics').only(['_path', 'title', 'status']).find()
+)
+const { data: notesList } = await useAsyncData('sidebar-notes', () =>
+  queryContent('/notes').only(['_path', 'title']).find()
+)
 
 function closeSidebar() {
   sidebarOpen.value = false

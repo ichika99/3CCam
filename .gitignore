@@ -29,3 +29,6 @@ research/**/*.png
 research/**/*.jpg
 research/**/*.jpeg
 research/**/*.gif
+
+# Assets archive (local only, not for build)
+assets-archive/
