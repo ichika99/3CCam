@@ -120,35 +120,87 @@
   --tw-prose-td-borders: rgba(255, 255, 255, 0.06);
 }
 
+/* --- 标题通用：加粗 + hover 右移效果 --- */
+.prose :is(h1, h2, h3, h4, h5, h6) {
+  font-weight: 700;
+  transition: transform 0.2s ease, color 0.2s ease;
+}
+.prose :is(h1, h2, h3, h4, h5, h6):hover {
+  transform: translateX(4px);
+}
+.prose :is(h1, h2, h3, h4, h5, h6) a,
+.prose :is(h1, h2, h3, h4, h5, h6) a:hover,
+.prose :is(h1, h2, h3, h4, h5, h6) a:focus {
+  text-decoration: none !important;
+  text-decoration-line: none !important;
+  font-weight: inherit !important;
+  color: inherit;
+  background-image: none !important;
+  background-size: 0 !important;
+}
+
+/* --- h1: 页面大标题，深黑 --- */
 .prose h1 {
   @apply text-xl sm:text-2xl font-bold tracking-tight;
+  color: #0f172a;
 }
+.dark .prose h1 {
+  color: #f1f5f9;
+}
+
+/* --- h2: 主章节标题，蓝色系 + 底部分割线 --- */
 .prose h2 {
   @apply text-lg sm:text-xl font-semibold tracking-tight pb-2 mt-8 sm:mt-10 mb-4;
   border-bottom: 1px solid #e5e7eb;
+  color: #1d4ed8;
 }
 .dark .prose h2 {
   border-bottom-color: rgba(255, 255, 255, 0.06);
+  color: #60a5fa;
 }
+
+/* --- h3: 子章节标题，青蓝色 --- */
 .prose h3 {
   @apply text-base font-semibold mt-6 sm:mt-8 mb-3;
+  /* color: #0e7490; */
 }
+.dark .prose h3 {
+  /* color: #22d3ee; */
+}
+
+/* --- h4: 小节标题，紫灰色 --- */
 .prose h4 {
   @apply text-sm font-semibold mt-4 sm:mt-6 mb-2;
-  color: #6b7280;
+  /* color: #7c3aed;  */
 }
 .dark .prose h4 {
-  color: #9ca3af;
+  /* color: #a78bfa; */
+}
+
+/* --- h5: 更细小节，暖灰色 + 斜体 --- */
+.prose h5 {
+  @apply text-sm font-medium mt-3 sm:mt-4 mb-1.5 italic;
+  color: #78716c;
+}
+.dark .prose h5 {
+  color: #a1a1aa;
 }
 
 .prose a {
-  @apply no-underline hover:underline underline-offset-2;
+  @apply no-underline underline-offset-2;
   color: #2563eb;
-  text-decoration-color: rgba(37, 99, 235, 0.3);
+  background-image: linear-gradient(#2563eb, #2563eb);
+  background-position: 0% 100%;
+  background-repeat: no-repeat;
+  background-size: 0% 1px;
+  transition: background-size 0.3s ease, color 0.2s ease;
+}
+.prose a:hover {
+  background-size: 100% 1px;
 }
 .dark .prose a {
   color: #60a5fa;
-  text-decoration-color: rgba(96, 165, 250, 0.4);
+  background-image: linear-gradient(#60a5fa, #60a5fa);
 }
 
 .prose code:not(pre code) {

@@ -8,13 +8,14 @@
       <h4 class="mb-3 text-xs font-semibold uppercase tracking-wider text-gray-400 dark:text-gray-500">
         目录
       </h4>
-      <ul class="space-y-1 text-[13px] leading-relaxed">
+      <ul class="space-y-0.5 text-[13px] leading-relaxed">
         <li v-for="link in links" :key="link.id">
+          <!-- h2 级别：始终显示 -->
           <a
             :href="`#${link.id}`"
             class="toc-link block rounded-md px-2 py-1 transition-colors duration-150"
             :class="[
-              activeId === link.id
+              isActive(link.id)
                 ? 'bg-blue-50 text-blue-600 font-medium dark:bg-blue-500/10 dark:text-blue-400'
                 : 'text-gray-500 hover:text-gray-800 hover:bg-gray-50 dark:text-gray-400 dark:hover:text-gray-200 dark:hover:bg-white/[0.04]',
             ]"
@@ -22,13 +23,17 @@
           >
             {{ link.text }}
           </a>
-          <ul v-if="link.children?.length" class="mt-1 space-y-0.5 pl-3">
+          <!-- h3 子级：始终显示（常驻） -->
+          <ul
+            v-if="link.children?.length"
+            class="mt-0.5 space-y-0.5 pl-3"
+          >
             <li v-for="child in link.children" :key="child.id">
               <a
                 :href="`#${child.id}`"
                 class="toc-link block rounded-md px-2 py-0.5 text-xs transition-colors duration-150"
                 :class="[
-                  activeId === child.id
+                  isActive(child.id)
                     ? 'text-blue-600 font-medium dark:text-blue-400'
                     : 'text-gray-400 hover:text-gray-600 dark:text-gray-500 dark:hover:text-gray-300',
                 ]"
@@ -36,6 +41,29 @@
               >
                 {{ child.text }}
               </a>
+              <!-- h4+ 子级：仅当父级 h3 处于激活区域时展开（带防抖） -->
+              <div
+                v-if="child.children?.length"
+                class="toc-h4-wrapper overflow-hidden"
+                :class="shouldShowChildren(child) ? 'toc-h4-expanded' : 'toc-h4-collapsed'"
+              >
+                <ul class="mt-0.5 space-y-0.5 pl-3">
+                  <li v-for="grandchild in child.children" :key="grandchild.id">
+                    <a
+                      :href="`#${grandchild.id}`"
+                      class="toc-link block rounded-md px-2 py-0.5 text-xs transition-colors duration-150"
+                      :class="[
+                        isActive(grandchild.id)
+                          ? 'text-blue-600 font-medium dark:text-blue-400'
+                          : 'text-gray-400 hover:text-gray-600 dark:text-gray-500 dark:hover:text-gray-300',
+                      ]"
+                      @click.prevent="scrollToHeading(grandchild.id)"
+                    >
+                      {{ grandchild.text }}
+                    </a>
+                  </li>
+                </ul>
+              </div>
             </li>
           </ul>
         </li>
@@ -87,7 +115,7 @@
             </button>
           </div>
 
-          <!-- 目录列表 -->
+          <!-- 目录列表（移动端展示全部层级，不做折叠） -->
           <nav class="flex-1 overflow-y-auto overscroll-contain px-4 py-4">
             <ul class="space-y-1 text-[14px] leading-relaxed">
               <li v-for="link in links" :key="link.id">
@@ -95,7 +123,7 @@
                   :href="`#${link.id}`"
                   class="block rounded-md px-3 py-2 text-gray-700 transition-colors hover:bg-gray-100 hover:text-gray-900 dark:text-gray-300 dark:hover:bg-white/[0.06] dark:hover:text-gray-100"
                   :class="[
-                    activeId === link.id ? 'bg-blue-50 !text-blue-600 font-medium dark:bg-blue-500/10 dark:!text-blue-400' : '',
+                    isActive(link.id) ? 'bg-blue-50 !text-blue-600 font-medium dark:bg-blue-500/10 dark:!text-blue-400' : '',
                   ]"
                   @click.prevent="scrollToFromDrawer(link.id)"
                 >
@@ -107,12 +135,26 @@
                       :href="`#${child.id}`"
                       class="block rounded-md px-3 py-1.5 text-[13px] text-gray-500 transition-colors hover:bg-gray-100 hover:text-gray-700 dark:text-gray-400 dark:hover:bg-white/[0.06] dark:hover:text-gray-200"
                       :class="[
-                        activeId === child.id ? '!text-blue-600 font-medium dark:!text-blue-400' : '',
+                        isActive(child.id) ? '!text-blue-600 font-medium dark:!text-blue-400' : '',
                       ]"
                       @click.prevent="scrollToFromDrawer(child.id)"
                     >
                       {{ child.text }}
                     </a>
+                    <ul v-if="child.children?.length" class="mt-0.5 space-y-0.5 pl-4">
+                      <li v-for="grandchild in child.children" :key="grandchild.id">
+                        <a
+                          :href="`#${grandchild.id}`"
+                          class="block rounded-md px-3 py-1.5 text-[12px] text-gray-400 transition-colors hover:bg-gray-100 hover:text-gray-600 dark:text-gray-500 dark:hover:bg-white/[0.06] dark:hover:text-gray-300"
+                          :class="[
+                            isActive(grandchild.id) ? '!text-blue-600 font-medium dark:!text-blue-400' : '',
+                          ]"
+                          @click.prevent="scrollToFromDrawer(grandchild.id)"
+                        >
+                          {{ grandchild.text }}
+                        </a>
+                      </li>
+                    </ul>
                   </li>
                 </ul>
               </li>
@@ -140,11 +182,65 @@ const props = defineProps<{
 const drawerOpen = ref(false)
 const activeId = ref('')
 
+// 防抖后的 activeId，用于控制 h4+ 展开
+// 避免快速滚动时子标题闪烁
+const debouncedActiveId = ref('')
+let debounceTimer: ReturnType<typeof setTimeout> | null = null
+const DEBOUNCE_DELAY = 150 // ms
+
+watch(activeId, (newVal) => {
+  if (debounceTimer) clearTimeout(debounceTimer)
+  debounceTimer = setTimeout(() => {
+    debouncedActiveId.value = newVal
+  }, DEBOUNCE_DELAY)
+})
+
 // 悬浮球位置
 const fabStyle = computed(() => ({
   bottom: '24px',
   right: '20px',
 }))
+
+// 构建每个父级下包含的全部后代 id 集合
+const parentDescendantsMap = computed(() => {
+  const map = new Map<string, Set<string>>()
+
+  for (const h2 of props.links) {
+    const h2Descendants = new Set<string>()
+    h2Descendants.add(h2.id)
+    if (h2.children) {
+      for (const h3 of h2.children) {
+        h2Descendants.add(h3.id)
+        const h3Descendants = new Set<string>()
+        h3Descendants.add(h3.id)
+        if (h3.children) {
+          for (const h4 of h3.children) {
+            h2Descendants.add(h4.id)
+            h3Descendants.add(h4.id)
+          }
+        }
+        map.set(h3.id, h3Descendants)
+      }
+    }
+    map.set(h2.id, h2Descendants)
+  }
+
+  return map
+})
+
+function isActive(id: string): boolean {
+  return activeId.value === id
+}
+
+/**
+ * 判断某个 h3 节点的 h4+ 子项是否应该展开
+ * 使用防抖后的 activeId，防止快速滚动闪烁
+ */
+function shouldShowChildren(link: TocLink): boolean {
+  const descendants = parentDescendantsMap.value.get(link.id)
+  if (!descendants) return false
+  return descendants.has(debouncedActiveId.value)
+}
 
 function getScrollContainer(): HTMLElement | null {
   return document.getElementById('main-scroll-container')
@@ -161,33 +257,34 @@ function scrollToHeading(id: string) {
     const offset = elRect.top - containerRect.top + container.scrollTop - 80
     container.scrollTo({ top: offset, behavior: 'smooth' })
   } else {
-    // fallback: 使用 scrollIntoView
     el.scrollIntoView({ behavior: 'smooth', block: 'start' })
   }
 }
 
 function scrollToFromDrawer(id: string) {
   drawerOpen.value = false
-  // 等动画结束后再滚动，避免视觉冲突
   setTimeout(() => {
     scrollToHeading(id)
   }, 150)
+}
+
+// 收集所有层级的 id 用于 IntersectionObserver
+function collectAllIds(links: TocLink[]): string[] {
+  const ids: string[] = []
+  for (const link of links) {
+    ids.push(link.id)
+    if (link.children) {
+      ids.push(...collectAllIds(link.children))
+    }
+  }
+  return ids
 }
 
 // Intersection Observer 追踪当前可见标题
 let observer: IntersectionObserver | null = null
 
 onMounted(() => {
-  const allIds: string[] = []
-  for (const link of props.links) {
-    allIds.push(link.id)
-    if (link.children) {
-      for (const child of link.children) {
-        allIds.push(child.id)
-      }
-    }
-  }
-
+  const allIds = collectAllIds(props.links)
   if (!allIds.length) return
 
   const container = getScrollContainer()
@@ -217,6 +314,7 @@ onMounted(() => {
 
 onUnmounted(() => {
   observer?.disconnect()
+  if (debounceTimer) clearTimeout(debounceTimer)
 })
 
 // 路由变化时关闭抽屉
@@ -234,6 +332,19 @@ watch(() => route.fullPath, () => {
 }
 :is(.dark) .toc .sticky {
   border-left-color: rgba(255, 255, 255, 0.06);
+}
+
+/* h4+ 展开/折叠：使用 CSS transition，避免 Vue Transition 组件造成的闪烁 */
+.toc-h4-wrapper {
+  transition: max-height 0.3s ease, opacity 0.25s ease;
+}
+.toc-h4-expanded {
+  max-height: 500px;
+  opacity: 1;
+}
+.toc-h4-collapsed {
+  max-height: 0;
+  opacity: 0;
 }
 
 /* 遮罩动画 */

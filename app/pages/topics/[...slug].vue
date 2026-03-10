@@ -73,6 +73,8 @@ const tocLinks = computed<TocLink[]>(() => {
 @media (min-width: 1280px) {
   .article-with-toc > .toc {
     width: 220px;
+    min-width: 220px;
+    max-width: 220px;
     flex-shrink: 0;
   }
 }

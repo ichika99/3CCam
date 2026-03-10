@@ -83,10 +83,12 @@ const tocLinks = computed<TocLink[]>(() => {
   min-width: 0;
 }
 
-/* 桌面端 TOC 占据右侧空间 */
+/* 桌面端 TOC 占据右侧空间，固定宽度防止内容区跳动 */
 @media (min-width: 1280px) {
   .article-with-toc > .toc {
     width: 220px;
+    min-width: 220px;
+    max-width: 220px;
     flex-shrink: 0;
   }
 }

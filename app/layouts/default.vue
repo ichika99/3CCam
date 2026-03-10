@@ -109,8 +109,8 @@
         </button>
       </header>
       <!-- 内容 -->
-      <div id="main-scroll-container" class="flex-1 overflow-y-auto overscroll-contain bg-white dark:bg-[#0f1117] transition-colors -webkit-overflow-scrolling-touch">
-        <div class="mx-auto max-w-4xl xl:max-w-5xl px-4 sm:px-8 py-6 sm:py-8 safe-area-bottom">
+      <div id="main-scroll-container" class="flex-1 overflow-y-auto overscroll-contain bg-white dark:bg-[#0f1117] transition-colors -webkit-overflow-scrolling-touch" style="scroll-behavior: smooth;">
+        <div class="mx-auto max-w-4xl xl:max-w-5xl px-4 sm:px-8 py-6 sm:py-8 pb-32 sm:pb-40 safe-area-bottom">
           <slot />
         </div>
       </div>
