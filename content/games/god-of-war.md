@@ -10,6 +10,7 @@ tags: ["combat", "one-shot", "cinematic", "over-the-shoulder", "lock-on"]
 date: 2026-03-06
 status: "in-progress"
 cover: ""
+visible: false
 ---
 
 ## 概述

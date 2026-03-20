@@ -30,5 +30,12 @@ research/**/*.jpg
 research/**/*.jpeg
 research/**/*.gif
 
+# Public media / images (large files, use CDN instead)
+public/media/
+public/images/
+
 # Assets archive (local only, not for build)
 assets-archive/
+
+# Temp files
+.git-tmp.txt

@@ -6,6 +6,7 @@
         <header class="mb-6 sm:mb-8 border-b border-gray-200 dark:border-white/[0.06] pb-4 sm:pb-6">
           <div class="mb-3 flex flex-wrap items-center gap-2 text-xs">
             <span
+              v-if="doc.status"
               class="inline-flex items-center rounded-full px-2 py-0.5 font-medium"
               :class="{
                 'bg-emerald-100 text-emerald-700 dark:bg-emerald-500/10 dark:text-emerald-400': doc.status === 'published',

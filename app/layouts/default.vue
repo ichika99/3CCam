@@ -31,42 +31,20 @@
         </button>
       </div>
 
-      <!-- 导航树 -->
+      <!-- 导航树（由配置驱动） -->
       <nav class="flex-1 overflow-y-auto overscroll-contain px-3 py-4 text-[13px] -webkit-overflow-scrolling-touch">
-        <!-- 游戏分析 -->
-        <SidebarSection title="游戏分析" icon="🎮">
-          <SidebarLink
-            v-for="item in (gamesList ?? [])"
-            :key="item._path"
-            :to="item._path!"
-            :label="(item.title ?? '').replace(' - 相机系统分析', '')"
-            :status="(item as any).status"
-            @click="closeSidebar"
-          />
-        </SidebarSection>
-
-        <!-- 专题对比 -->
-        <SidebarSection title="专题对比" icon="📊">
-          <SidebarLink
-            v-for="item in (topicsList ?? [])"
-            :key="item._path"
-            :to="item._path!"
-            :label="(item.title ?? '').replace(' - 相机系统分析', '')"
-            :status="(item as any).status"
-            @click="closeSidebar"
-          />
-        </SidebarSection>
-
-        <!-- 笔记 -->
-        <SidebarSection title="笔记" icon="📝">
-          <SidebarLink
-            v-for="item in (notesList ?? [])"
-            :key="item._path"
-            :to="item._path!"
-            :label="item.title ?? ''"
-            @click="closeSidebar"
-          />
-        </SidebarSection>
+        <template v-for="section in sidebarSections" :key="section.contentPath">
+          <SidebarSection :title="section.title" :icon="section.icon">
+            <SidebarLink
+              v-for="item in (sectionData[section.contentPath] ?? [])"
+              :key="item._path"
+              :to="item._path!"
+              :label="section.titleSuffix ? (item.title ?? '').replace(section.titleSuffix, '') : (item.title ?? '')"
+              :status="section.showStatus !== false ? (item as any).status : undefined"
+              @click="closeSidebar"
+            />
+          </SidebarSection>
+        </template>
       </nav>
 
       <!-- 底部信息 -->
@@ -119,21 +97,29 @@
 </template>
 
 <script setup lang="ts">
+import { sidebarSections } from '~/config/sidebar'
+
 const { isDark, toggle } = useTheme()
 
 const sidebarOpen = ref(false)
 const route = useRoute()
 
-// 使用 queryContent 获取侧边栏导航数据
-const { data: gamesList } = await useAsyncData('sidebar-games', () =>
-  queryContent('/games').only(['_path', 'title', 'status']).find()
-)
-const { data: topicsList } = await useAsyncData('sidebar-topics', () =>
-  queryContent('/topics').only(['_path', 'title', 'status']).find()
-)
-const { data: notesList } = await useAsyncData('sidebar-notes', () =>
-  queryContent('/notes').only(['_path', 'title']).find()
-)
+// 按配置动态查询每个 section 的文章列表，过滤掉 visible: false 的文章
+const sectionData = reactive<Record<string, any[]>>({})
+
+for (const section of sidebarSections) {
+  const { data } = await useAsyncData(
+    `sidebar-${section.contentPath}`,
+    () =>
+      queryContent(section.contentPath)
+        .where({ visible: { $ne: false } })
+        .only(['_path', 'title', 'status'])
+        .find()
+  )
+  watchEffect(() => {
+    sectionData[section.contentPath] = data.value ?? []
+  })
+}
 
 function closeSidebar() {
   sidebarOpen.value = false

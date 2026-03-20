@@ -13,31 +13,22 @@
       </p>
     </div>
 
-    <!-- 快捷入口 -->
-    <div class="mt-4 grid w-full max-w-xl gap-3 grid-cols-1 sm:grid-cols-3">
+    <!-- 快捷入口（由配置驱动） -->
+    <div
+      class="mt-4 grid w-full max-w-xl gap-3 grid-cols-1"
+      :class="gridColsClass"
+    >
       <NuxtLink
-        to="/games/ninja-gaiden"
+        v-for="section in sidebarSections"
+        :key="section.contentPath"
+        :to="firstArticle[section.contentPath] ?? section.contentPath"
         class="group rounded-xl border border-gray-200 bg-gray-50 p-4 sm:p-5 text-center transition-all hover:border-blue-300 hover:bg-blue-50 active:scale-[0.98] dark:border-white/[0.06] dark:bg-white/[0.02] dark:hover:border-blue-500/30 dark:hover:bg-blue-500/[0.04]"
       >
-        <div class="mb-2 text-2xl">🎮</div>
-        <h3 class="text-sm font-medium text-gray-700 group-hover:text-blue-600 dark:text-gray-200 dark:group-hover:text-blue-400 transition-colors">游戏分析</h3>
-        <p class="mt-1 text-xs text-gray-400 dark:text-gray-500">6 款游戏</p>
-      </NuxtLink>
-      <NuxtLink
-        to="/topics/lock-on"
-        class="group rounded-xl border border-gray-200 bg-gray-50 p-4 sm:p-5 text-center transition-all hover:border-blue-300 hover:bg-blue-50 active:scale-[0.98] dark:border-white/[0.06] dark:bg-white/[0.02] dark:hover:border-blue-500/30 dark:hover:bg-blue-500/[0.04]"
-      >
-        <div class="mb-2 text-2xl">📊</div>
-        <h3 class="text-sm font-medium text-gray-700 group-hover:text-blue-600 dark:text-gray-200 dark:group-hover:text-blue-400 transition-colors">专题对比</h3>
-        <p class="mt-1 text-xs text-gray-400 dark:text-gray-500">跨游戏分析</p>
-      </NuxtLink>
-      <NuxtLink
-        to="/notes/first-note"
-        class="group rounded-xl border border-gray-200 bg-gray-50 p-4 sm:p-5 text-center transition-all hover:border-blue-300 hover:bg-blue-50 active:scale-[0.98] dark:border-white/[0.06] dark:bg-white/[0.02] dark:hover:border-blue-500/30 dark:hover:bg-blue-500/[0.04]"
-      >
-        <div class="mb-2 text-2xl">📝</div>
-        <h3 class="text-sm font-medium text-gray-700 group-hover:text-blue-600 dark:text-gray-200 dark:group-hover:text-blue-400 transition-colors">笔记</h3>
-        <p class="mt-1 text-xs text-gray-400 dark:text-gray-500">灵感记录</p>
+        <div class="mb-2 text-2xl">{{ section.icon }}</div>
+        <h3 class="text-sm font-medium text-gray-700 group-hover:text-blue-600 dark:text-gray-200 dark:group-hover:text-blue-400 transition-colors">{{ section.title }}</h3>
+        <p class="mt-1 text-xs text-gray-400 dark:text-gray-500">
+          {{ section.homeDescription || articleCount[section.contentPath] + ' 篇文章' }}
+        </p>
       </NuxtLink>
     </div>
 
@@ -55,7 +46,37 @@
 </template>
 
 <script setup lang="ts">
+import { sidebarSections } from '~/config/sidebar'
+
 useHead({
   title: '3CCam - 3D动作游戏相机设计研究',
 })
+
+// 根据 section 数量动态计算网格列数
+const gridColsClass = computed(() => {
+  const count = sidebarSections.length
+  if (count <= 2) return 'sm:grid-cols-2'
+  if (count <= 3) return 'sm:grid-cols-3'
+  return 'sm:grid-cols-2 lg:grid-cols-4'
+})
+
+// 动态查询每个 section 的文章数量和第一篇文章路径
+const articleCount = reactive<Record<string, number>>({})
+const firstArticle = reactive<Record<string, string>>({})
+
+for (const section of sidebarSections) {
+  const { data } = await useAsyncData(
+    `home-${section.contentPath}`,
+    () =>
+      queryContent(section.contentPath)
+        .where({ visible: { $ne: false } })
+        .only(['_path'])
+        .find()
+  )
+  watchEffect(() => {
+    const list = data.value ?? []
+    articleCount[section.contentPath] = list.length
+    firstArticle[section.contentPath] = list[0]?._path ?? section.contentPath
+  })
+}
 </script>

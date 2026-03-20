@@ -22,7 +22,7 @@ export default defineNuxtConfig({
       },
     },
     navigation: {
-      fields: ['game', 'tags', 'status', 'camera_type', 'date', 'cover'],
+      fields: ['game', 'tags', 'status', 'camera_type', 'date', 'cover', 'visible'],
     },
   },
 
